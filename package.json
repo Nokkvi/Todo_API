@@ -1,0 +1,10 @@
+{
+  "name": "todo_list_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Nokkvi Sverrisson <nokkvisverriss@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "graphql-yoga": "^1.16.2"
+  }
+}
