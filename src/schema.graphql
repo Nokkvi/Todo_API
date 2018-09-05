@@ -5,13 +5,17 @@ type Query {
 }
 
 type Mutation {
-  createUser(name: String!) : User!
-  #createTodo(text: String!, user: User!) : Todo!
+  createUser(name: String!, password: String!) : User
+  changePassword(id: ID!, password: String!) : User
+  deleteUser(id: ID!) : Boolean
+
+  #createTodo(text: String!, user: User!) : Todo
 }
 
 type User {
   id: ID!
   name: String!
+  password: String!
   todos: [Todo!]!
 }
 

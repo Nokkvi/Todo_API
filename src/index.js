@@ -8,6 +8,7 @@ const options = {
 let users = [{
   id: "user-1",
   name: "Bob",
+  password: "password123",
   todos: [{
     id: "todo-1",
     text: "Mop Ceiling"
@@ -28,11 +29,31 @@ const resolvers = {
       const user = {
         id: `user-${++userIdCount}`,
         name: args.name,
+        password: args.password,
         todos: []
       }
 
       users.push(user);
       return user;
+    },
+
+    changePassword: (root, args) => {
+      for(let i = 0; i < users.length; i++) {
+        if(users[i].id == args.id) {
+          users[i].password = args.password;
+          return users[i];
+        }
+      }
+    },
+
+    deleteUser: (root, args) => {
+      for(let i = 0; i < users.length; i++) {
+        if(users[i].id == args.id) {
+          users.splice(i, 1);
+          return true;
+        }
+      }
+      return false;
     }
   },
 
