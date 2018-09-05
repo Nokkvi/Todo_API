@@ -11,7 +11,7 @@ let users = [{
   password: "password123",
   todos: [{
     id: "todo-1",
-    text: "Mop Ceiling"
+    text: "Mop Ceiling",
   }]
 }]
 
@@ -22,6 +22,14 @@ const resolvers = {
     info: () => `Welcome to the Todo list website`,
 
     users: () => users,
+
+    user: (root, args) => {
+      for(let i = 0; i < users.length; i++){
+        if(users[i].id === args.id){
+          return users[i];
+        }
+      }
+    }
   },
 
   Mutation: {
@@ -39,7 +47,7 @@ const resolvers = {
 
     changePassword: (root, args) => {
       for(let i = 0; i < users.length; i++) {
-        if(users[i].id == args.id) {
+        if(users[i].id === args.id) {
           users[i].password = args.password;
           return users[i];
         }
@@ -48,7 +56,7 @@ const resolvers = {
 
     deleteUser: (root, args) => {
       for(let i = 0; i < users.length; i++) {
-        if(users[i].id == args.id) {
+        if(users[i].id === args.id) {
           users.splice(i, 1);
           return true;
         }

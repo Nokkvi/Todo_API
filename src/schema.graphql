@@ -22,5 +22,4 @@ type User {
 type Todo {
   id: ID!
   text: String!
-  #user: User!
 }
