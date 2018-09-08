@@ -15,7 +15,19 @@ let users = [{
   }]
 }]
 
+function getTodoIdCount() {
+  let count = 0;
+  users.forEach(function(user) {
+    count += user.todos.length;
+    console.log(count);
+  });
+  return count;
+}
+
 let userIdCount = users.length;
+
+let todoIdCount = getTodoIdCount();
+
 
 const resolvers = {
   Query: {
@@ -43,6 +55,20 @@ const resolvers = {
 
       users.push(user);
       return user;
+    },
+
+    createTodo: (root, args) => {
+      const todo = {
+        id: `todo-${++todoIdCount}`,
+        text: args.text
+      }
+
+      for(let i = 0; i < users.length; i++) {
+        if(users[i].id === args.userId) {
+          users[i].todos.push(todo);
+          return users[i];
+        }
+      }
     },
 
     changePassword: (root, args) => {

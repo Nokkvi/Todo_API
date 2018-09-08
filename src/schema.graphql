@@ -6,10 +6,11 @@ type Query {
 
 type Mutation {
   createUser(name: String!, password: String!) : User
+  createTodo(text: String!, userId: ID): User
+  
   changePassword(id: ID!, password: String!) : User
-  deleteUser(id: ID!) : Boolean
 
-  #createTodo(text: String!, user: User!) : Todo
+  deleteUser(id: ID!) : Boolean
 }
 
 type User {
