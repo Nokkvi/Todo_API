@@ -28,6 +28,7 @@ const resolvers = {
       return context.db.mutation.createUser({
         data: {
           name: args.name,
+          email: args.email,
           password: args.password
         }
       }, info)

@@ -1,5 +1,5 @@
 # source: https://eu1.prisma.sh/nokkvi-sverrisson-13c544/database/dev
-# timestamp: Sun Sep 09 2018 20:23:37 GMT+0000 (Greenwich Standard Time)
+# timestamp: Sun Sep 09 2018 23:14:10 GMT+0000 (Greenwich Standard Time)
 
 type AggregateTodo {
   count: Int!
@@ -397,6 +397,7 @@ type User implements Node {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  email: String!
   name: String!
   password: String!
   todos(where: TodoWhereInput, orderBy: TodoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Todo!]
@@ -413,6 +414,7 @@ type UserConnection {
 }
 
 input UserCreateInput {
+  email: String!
   name: String!
   password: String!
   todos: TodoCreateManyWithoutUserInput
@@ -424,6 +426,7 @@ input UserCreateOneWithoutTodosInput {
 }
 
 input UserCreateWithoutTodosInput {
+  email: String!
   name: String!
   password: String!
 }
@@ -444,6 +447,8 @@ enum UserOrderByInput {
   createdAt_DESC
   updatedAt_ASC
   updatedAt_DESC
+  email_ASC
+  email_DESC
   name_ASC
   name_DESC
   password_ASC
@@ -454,6 +459,7 @@ type UserPreviousValues {
   id: ID!
   createdAt: DateTime!
   updatedAt: DateTime!
+  email: String!
   name: String!
   password: String!
 }
@@ -498,6 +504,7 @@ input UserSubscriptionWhereInput {
 }
 
 input UserUpdateInput {
+  email: String
   name: String
   password: String
   todos: TodoUpdateManyWithoutUserInput
@@ -512,6 +519,7 @@ input UserUpdateOneWithoutTodosInput {
 }
 
 input UserUpdateWithoutTodosDataInput {
+  email: String
   name: String
   password: String
 }
@@ -614,6 +622,46 @@ input UserWhereInput {
 
   """All values greater than or equal the given value."""
   updatedAt_gte: DateTime
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
   name: String
 
   """All values that are not equal to given value."""
@@ -701,4 +749,5 @@ input UserWhereInput {
 
 input UserWhereUniqueInput {
   id: ID
+  email: String
 }
