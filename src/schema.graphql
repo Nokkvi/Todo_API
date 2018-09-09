@@ -1,3 +1,6 @@
+# import User from "./generated/prisma.graphql"
+# import Todo from "./generated/prisma.graphql"
+
 type Query {
   info: String!
   users: [User!]!
@@ -6,21 +9,11 @@ type Query {
 
 type Mutation {
   createUser(name: String!, password: String!) : User
-  createTodo(text: String!, userId: ID): User
+  createTodo(text: String!, userId: ID!, dueAt: DateTime): Todo
   
-  changePassword(id: ID!, password: String!) : User
+  changePassword(userId: ID!, password: String!) : User
+  #editTodo(text: String!, done: Boolean, userId: ID): User
 
-  deleteUser(id: ID!) : Boolean
-}
-
-type User {
-  id: ID!
-  name: String!
-  password: String!
-  todos: [Todo!]!
-}
-
-type Todo {
-  id: ID!
-  text: String!
+  deleteUser(userId: ID!) : User
+  #deleteTodo(text: String!, userId: ID) : Boolean
 }
