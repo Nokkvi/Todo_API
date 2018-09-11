@@ -1,6 +1,20 @@
 # import User from "./generated/prisma.graphql"
 # import Todo from "./generated/prisma.graphql"
 
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  todos: [Todo!]!
+}
+
 type Query {
   info: String!
   users: [User!]!
@@ -8,12 +22,13 @@ type Query {
 }
 
 type Mutation {
-  createUser(name: String!, email: String!, password: String!) : User
-  createTodo(text: String!, userId: ID!, dueAt: DateTime): Todo
+  signup(email: String!, password: String!, name: String!) : AuthPayload
+  login(email: String!, password: String!) : AuthPayload
+  createTodo(text: String!, dueAt: DateTime) : Todo
   
-  changePassword(userId: ID!, password: String!) : User
+  changePassword(password: String!) : User
   #editTodo(text: String!, done: Boolean, userId: ID): User
 
-  deleteUser(userId: ID!) : User
+  deleteUser : User
   #deleteTodo(text: String!, userId: ID) : Boolean
 }
