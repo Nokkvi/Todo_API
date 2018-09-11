@@ -52,11 +52,11 @@ function createTodo(parent, args, context, info) {
       dueAt: args.dueAt,
       user: {
         connect: {
-          id: userId
+          id: userId,
         }
       }
     }
-  }, info)
+  }, info);
 }
 
 async function changePassword(parent, args, context, info) {
@@ -64,19 +64,50 @@ async function changePassword(parent, args, context, info) {
   const password = await bcrypt.hash(args.password, 10)
   return context.db.mutation.updateUser({
     data: {
-      password
+      password,
     },
     where: {
-      id: userId 
+      id: userId,
     }
-  }, info)
+  }, info);
+}
+
+function editTodo(parent, args, context, info) {
+  return context.db.mutation.updateTodo({
+    data: {
+      text: args.text,
+      dueAt: args.dueAt,
+    },
+    where: {
+      id: args.todoId,
+    }
+  }, info);
+}
+
+function finishTodo(parent, args, context, info) {
+  return context.db.mutation.updateTodo({
+    data: {
+      done: true,
+    },
+    where: {
+      id: args.todoId,
+    }
+  }, info);
 }
 
 function deleteUser(parent, args, context, info) {
   const userId = getUserId(context)
   return context.db.mutation.deleteUser({
     where: {
-      id: userId
+      id: userId,
+    }
+  }, info);
+}
+
+function deleteTodo(parent, args, context, info) {
+  return context.db.mutation.deleteTodo({
+    where: {
+      id: args.todoId,
     }
   }, info);
 }
@@ -86,5 +117,8 @@ module.exports = {
     login,
     createTodo,
     changePassword,
+    editTodo,
+    finishTodo,
     deleteUser,
+    deleteTodo,
 }

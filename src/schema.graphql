@@ -27,8 +27,9 @@ type Mutation {
   createTodo(text: String!, dueAt: DateTime) : Todo
   
   changePassword(password: String!) : User
-  #editTodo(text: String!, done: Boolean, userId: ID): User
+  editTodo(text: String, dueAt: DateTime, todoId: ID!): Todo
+  finishTodo(todoId: ID!): Todo
 
   deleteUser : User
-  #deleteTodo(text: String!, userId: ID) : Boolean
+  deleteTodo(todoId: ID) : Todo
 }
