@@ -5,12 +5,14 @@ type User {
   email: String! @unique
   name: String!
   password: String!
-  todos: [Todo!]! @relation(name: "TodosByUser" onDelete: CASCADE)
+  todos: [Todo!]! @relation(name: "TodosForUser" onDelete: CASCADE)
+  created: [Todo!]! @relation(name: "TodosCreatedByUser" onDelete: CASCADE)
 }
 
 type Todo {
   id: ID! @unique
-  user: User! @relation(name: "TodosByUser")
+  user: User! @relation(name: "TodosForUser")
+  creator: User! @relation(name: "TodosCreatedByUser")
   createdAt: DateTime!
   updatedAt: DateTime!
   dueAt: DateTime

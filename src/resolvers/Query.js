@@ -14,8 +14,17 @@ function user(parent, args, context, info) {
   }, info)
 }
 
+function todo(parent, args, context, info) {
+  return context.db.query.todo({
+    where: {
+      id: args.id
+    }
+  }, info)
+}
+
 module.exports = {
   info,
   users,
   user,
+  todo,
 }

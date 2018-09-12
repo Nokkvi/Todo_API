@@ -13,21 +13,24 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   todos: [Todo!]!
+  created: [Todo!]!
 }
 
 type Query {
   info: String!
   users: [User!]!
   user(id: ID!) : User
+  todo(id: ID!) : Todo
 }
 
 type Mutation {
   signup(email: String!, password: String!, name: String!) : AuthPayload
   login(email: String!, password: String!) : AuthPayload
-  createTodo(text: String!, dueAt: DateTime) : Todo
+  createTodo(text: String!, dueAt: DateTime, userId: ID) : Todo
   
   changePassword(password: String!) : User
   editTodo(text: String, dueAt: DateTime, todoId: ID!): Todo
+  assignTodo(userId: ID!, todoId: ID!): Todo
   finishTodo(todoId: ID!): Todo
 
   deleteUser : User

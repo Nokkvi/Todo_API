@@ -44,7 +44,8 @@ async function login(parent, args, context, info) {
 }
 
 function createTodo(parent, args, context, info) {
-  const userId = getUserId(context)
+  const creatorId = getUserId(context)
+  const userId = args.userId || creatorId
   return context.db.mutation.createTodo({
     data: {
       text: args.text,
@@ -54,8 +55,13 @@ function createTodo(parent, args, context, info) {
         connect: {
           id: userId,
         }
-      }
-    }
+      },
+      creator: {
+        connect: {
+          id: creatorId,
+        }
+      },
+    },
   }, info);
 }
 
@@ -68,11 +74,22 @@ async function changePassword(parent, args, context, info) {
     },
     where: {
       id: userId,
-    }
+    },
   }, info);
 }
 
-function editTodo(parent, args, context, info) {
+async function editTodo(parent, args, context, info) {
+  const userId = getUserId(context)
+  const todo = await context.db.query.todo({
+    where: {
+      id: args.todoId,
+    },
+  }, ` { id creator {id} } `);
+  
+  if (!todo) throw new Error('Todo does not exist'); 
+  if (userId != todo.creator.id) {
+    throw new Error('Logged in user is not creator');
+  }
   return context.db.mutation.updateTodo({
     data: {
       text: args.text,
@@ -80,18 +97,53 @@ function editTodo(parent, args, context, info) {
     },
     where: {
       id: args.todoId,
-    }
+    },
   }, info);
 }
 
-function finishTodo(parent, args, context, info) {
+async function assignTodo(parent, args, context, info) {
+  const userId = getUserId(context)
+  const todo = await context.db.query.todo({
+    where: {
+      id: args.todoId,
+    },
+  }, ` { id creator {id} } `);
+  
+  if (!todo) throw new Error('Todo does not exist'); 
+  if (userId != todo.creator.id) {
+    throw new Error('Logged in user is not creator');
+  }
+  return context.db.mutation.updateTodo({
+    data: {
+      user: {
+        connect: {
+          id: args.userId,
+        }
+      },
+    },
+    where: {
+      id: args.todoId,
+    },
+  }, info);
+}
+
+async function finishTodo(parent, args, context, info) {
+  const userId = getUserId(context)
+  const todo = await context.db.query.todo({
+    where: {
+      id: args.todoId,
+    },
+  }, ` { id user {id} } `)
+  if (userId != todo.user.id) {
+    throw new Error('Logged in user is not asignee')
+  }
   return context.db.mutation.updateTodo({
     data: {
       done: true,
     },
     where: {
       id: args.todoId,
-    }
+    },
   }, info);
 }
 
@@ -100,11 +152,22 @@ function deleteUser(parent, args, context, info) {
   return context.db.mutation.deleteUser({
     where: {
       id: userId,
-    }
+    },
   }, info);
 }
 
-function deleteTodo(parent, args, context, info) {
+async function deleteTodo(parent, args, context, info) {
+  const userId = getUserId(context)
+  const todo = await context.db.query.todo({
+    where: {
+      id: args.todoId,
+    },
+  }, ` { id creator {id} user {id}} `);
+  
+  if (!todo) throw new Error('Todo does not exist'); 
+  if (!((userId == todo.creator.id) || (userId == todo.user.id))) {
+    throw new Error('Logged in user is not creator or assignee');
+  }
   return context.db.mutation.deleteTodo({
     where: {
       id: args.todoId,
@@ -118,6 +181,7 @@ module.exports = {
     createTodo,
     changePassword,
     editTodo,
+    assignTodo,
     finishTodo,
     deleteUser,
     deleteTodo,
